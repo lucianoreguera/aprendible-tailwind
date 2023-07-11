@@ -1,0 +1,54 @@
+- Tailwind es un framework css para construir interfaces web de manera rápida y sencilla sin salir del html.
+- Se basa en la filosofía de utility-first es decir, es un conjunto de utilidades que se usan en el html directamente, a diferencia de bootstrap que ya nos dan componentes armados, tailwind nos permite crearlos mediante utilidades
+- Si bien el framework completo tiene muchas utilidades, a la hora de hacer el build, solo se agregaran las utilidades utilizadas en el diseño
+- Instalación: 
+	npm init -y, 
+	npm install -D tailwindcss,
+	crear un archivo css con -> @tailwind base;
+				    @tailwind components;
+				    @tailwind utilities;
+	crear archivo de configuración -> npx tailwind init
+	en el archivo tailwind.config.js indicamos los archivos que van a contener tailwind content: ['index.html']...
+- Generar el output -> npx tailwindcss -i tailwind.css(archivo creado en el paso anterios) -o styles.css(nombre que tendra el archivo generado por el build) --minify(es opcional y nos permite crear el archivo minificado)
+	este tipo de output se pone tedioso a la hora de desarrollar, ya que al generar el output solo nos compila las clases utilizadas, y al seguir desarrollando y utilizando nuevas clases no estaran disponibles en el output hasta que ejecutemos nuevamnte el comando anterior
+	para salvar esto viene vite
+- Instalando Vite en nuestro proyecto -> npm install -D vite postcss autoprefixer
+- Configurando postcss -> npx tailwindcss init -p
+- Luego en package.json -> scripts: { "dev":"vite dev", "build":"vite build", "preview":"vite preview" } -> dev(cuando desarrollamos), build(para generar el build de producción), preview(Previsualización del build)
+	Ahora vite se encarga de compilar y agregar automaticamente las clases agregadas en el diseño, entonces ya descartamos la opción del output(el styles.css generado anteriormente)
+- Herramientas para el desarrollo -> 1) en VSCode -> tailwind intellisence 2) intalar Prettier en el proyecto
+	Intalando Prettier -> npm intall prettier -D
+	Usando Prettier -> npm prettier --write index.html(archivo que quiero formatear), esto se puede hacer tedioso si lo tenemos que hacer manualmente para cada archivo que estemos editando, entonces automatizamos
+	Automatizando Prettier -> instalamos la extensión de prettier en VSCode(Prettier - Code formatter de prettier.io), luego en file->settings de VSCode, buscamos formatter, elegimos prettier en Default Formatter y seleccionamos format on save para cuando se guarde un cambio y format on paste para cuando pegamos código
+	Otra herramienta que podemos utilizar es prettier-plugin-tailwidcss que nos permite mantener una coherencia en el orden que usamos las clases de tailwind en nuestros desarrollos, ej, primero usar el texto, luego los colores, etc, con esta extension mantenemos el orden en todos los elementos
+		para instalar npm prettier-plugin-tailwidcss -D
+
+- Cada unidad que utiliza tailwind en los h,w,p,m es equivalente a 4px -> ejemplo h-16 seria 16*4=64px y 16/4=4rem
+- Cuando creo una página nueva y está iniciado el servidor, debo reiniciarlo para que tome los cambios en la nueva página
+- Para la construcción de formularios nos podemos ayudar de un plugin oficial que nos provee tailwindcss -> (https://github.com/tailwindlabs/tailwindcss-forms)
+	Instalando tailwindcss form -> npm install -D @tailwindcss/forms
+	en tailwind.config.js -> plugins: [
+		require('@tailwindcss/forms'),
+		// ...
+	],
+
+- Para ayudarnos con los estilos de un text, por ejemplo un post que viene de una base de datos, tenemos tailwind typography (https://tailwindcss.com/docs/typography-plugin)
+	Instalando tailwind typography -> npm install -D @tailwindcss/typography
+	en tailwind.config.js -> plugins: [
+		require('@tailwindcss/typography'),
+		// ...
+	],
+	En el HTML al contenedor del texto le agrego class="prose" y nos da un estilo por defecto
+	con prose-propiedad puedo modificar las propiedades
+
+- Modo Oscuro -> Para activar modo oscuro en tailwind.config.js -> darkMode: 'media' o darkMode: 'class', media toma por defecto el tema del sistema operativo, class es para activar desactivar del boton de la vista
+	luego en el html en <html lang="es" class="dark">...</html>
+	si queremos personalizar el nombre del darkmode por ejemplo a data-theme en tailwind.config.js -> darkMode: ['class', '[data-theme=dark]'] y en <html lang="es" data-theme="dark">...</html>
+
+- Configuración personalizada de tailwind, recordemos que podemos usar estilos inline ej:dark:bg-[#0b101d]
+	pero si el color lo usamos en varios lugares => conviene usar una configuración personalizada -> en tailwind.config.js -> theme: { extend:{ colors:{ primary: '#440044' } } }
+	entonces en el html usamos text-primary, bg-primary ....
+	theme: { extend:{ colors:{ "primary-100": '#440044', "primary-200": '#440045' } } }
+	=> en html -> bg-primary-100
+	theme: { extend:{ colors:{ primary: {100: '#440044', 200: '#440045' } } }
+	=> en html -> bg-primary-100
